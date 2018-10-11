@@ -1,0 +1,464 @@
+
+Chef has a central server that helps in configuring all the systems attached to it.
+
+    It is a configuration management tool written in Ruby and Erlang.
+    It automates the process of installing, configuring, and deploying infrastructure in your network, and the best part is all these processes are automated.
+
+Previously configuring systems are performed by operations, where developers had no part in it. Chef brings both of them close, enabling developers to perform the traditional configuration task in systems at a fast pace, resulting in a DevOps environment
+
+The Chef ecosystem can be divided into three major components:
+
+    Workstations
+    Chef server
+    Nodes
+
+We will go through them in brief in upcoming cards. Apart from this we have,
+
+    Knife: Command line tool to interact with nodes and Chef server.
+    Recipes: It has the instructions that are required to configure a node.
+    Cookbook: It is a collection of recipes and supporting files.
+    Test Kitchen: It is used to test cookbooks on various platforms.
+    Supermarket: A site where you can download chef cookbooks.
+    
+Supremacy of Chef
+
+    Secure and scalable. Can manage a large number of servers.
+    Chef freely shares recipe and cookbooks in chef-supermarket.
+    All the popular cloud service providers such as Amazon AWS, Microsoft Azure, Google cloud, VMWare, IBM SmartCloud, etc. can be combined with chef.
+    Supports multiple OS platforms.
+    Has a huge community contribution and support, hence it is easy to work and also you can find a lot of resources for help.
+    Supports third-party tools like test kitchen, food critic to test the scripts.
+    Less human intervention which results in few number of errors.
+    Swift, gets the job done in few minutes that ideally would take days.
+
+Role of Chef server
+    Acts as a repository for all the cookbooks available.
+    Stores information about all the nodes that the server manages.
+    Does not fire any commands on the nodes, instead, allows the nodes to check for new configuration and then configure themselves resulting in distributed load (Pull method).
+    Holds all the Cookbooks uploaded using a workstation.
+    Manages the runlist which has set of recipes for a node
+    The server is written in Erlang that makes it more scalable and improves its the performance.
+    
+    
+    
+    
+Chef Server Offering
+Hosted Chef
+
+    It is the cloud version of Chef Server.
+    Comes with trail version supporting only five nodes and an Enterprise service with all functionalities of Chef available.
+    Zero cost of managing the hardware and software upgrades.
+    No time and effort required to configure and manage the server.
+
+On Premises chef
+
+    This also comes with an open source version and an enterprise version.
+    Here the server is present in the client environment.
+    Requires manual configuration.
+    Comes with all the functionality and support that hosted chef offers.
+    Initial configuration of on-premises chef requires some skill-set.
+    
+ Let us look at Hosted Chef setup.
+
+    Sign up for hosted chef by creating a Chef account in Hosted Chef.
+    Once you signup you will be asked to enter an unique organization name.
+    Download the starter kit zip file that has a chef-repo folder and all its contents.
+    Extract this file in any location. You will be doing all your work inside this folder.
+    .chef/ is a hidden directory that has validation key to server and knife.rb file. You will learn about these files in upcoming cards.
+
+
+
+Chef Server Setup
+
+Let us look at Hosted Chef setup.
+
+    Sign up for hosted chef by creating a Chef account in Hosted Chef.
+    Once you signup you will be asked to enter an unique organization name.
+    Download the starter kit zip file that has a chef-repo folder and all its contents.
+    Extract this file in any location. You will be doing all your work inside this folder.
+    .chef/ is a hidden directory that has validation key to server and knife.rb file. You will learn about these files in upcoming cards.
+
+-------------------------------------
+Chef Server Setup
+
+In server web UI, you can see four tabs namely Nodes, Policy, Report, and Administration.
+
+    Nodes have a list of all nodes connected to the server.
+    Policy has all the cookbooks uploaded to the server.
+    Report has all server activities logged during chef-client run.
+    Administration has a list of organization you have created and allows you to reset validation key, re-download starter kit, etc.
+
+https://docs.chef.io/install_server.html
+
+--------------------------------------
+
+
+Chef Server Components
+
+A typical Chef server has the following components:
+
+    Nginx
+    Bookshelf
+    WebUI-Manage
+    Message Queue
+    Chef Solr
+    PostgreSQL
+	
+Nginx
+
+    It is an HTTP server and reverse proxy that acts as a load balancer.
+    It handles all the requests from the client and redirects the request to the appropriate element.
+    For instance, if a client sends a request about a cookbook then it would be redirected to Bookshelf.
+
+Bookshelf
+
+    It stores the cookbooks that are uploaded to the server.
+    It also maintains different version of the same cookbook.
+    The files are saved based on the checksum Id. A file will be updated only when the checksum changes.
+
+Chef Solr
+
+    It is a search engine in Chef server.
+    It is used in text searching and indexing with the help of Apache Solr and its REST API.
+    Apache Solr is an open source search engine built using Java library called Lucene.
+
+Message Queue
+
+    The requests from the client are managed using open source RabbitMQ.
+    This will queue the messages for the chef-expander to pull and send them to Chef Solr for indexing, thus helping in reduced workload.
+
+PostgreSQL
+
+    It is an open source RDBMS used to store data in Chef server.
+
+
+    It is a Ruby on Rails 3.0 application that helps in managing the Chef server.
+    It has web interface using which the user can communicate with the server.
+
+-----------------------------------------------
+Introduction to Workstation
+
+    A workstation is a machine that acts as an interface with the Chef server and nodes.
+    A workstation should have Chef DK (Development Kit) installed in it.
+    It uses the knife command line tool to communicate with the server.
+    It also acts as a local repository for the cookbooks.
+    Here you can create cookbooks and test them using test kitchen without deploying them to the nodes.
+    It also keeps the chef-repo in sync with the version source control like git.
+
+
+Workstation Setup
+
+    Setting up a workstation is quite easy. Just download and install the Chef DK package for your OS from the chef website: www.chef.io
+    Chef DK has all the tools required to run a workstation which includes knife, test kitchen, git, and chef-client.
+    In Windows machine, launch chefDK to open Windows PowerShell as administrator.
+    For systems other than Windows machine, Use the terminal to run commands.
+    Run the command chef verify. This returns a success message if all the components are installed correctly.
+    If you wish to test the cookbooks, install vagrant and virtual box also on your workstation.
+
+Node : 
+virtual, physical, network appliance 
+
+
+Workstation Setup in Katakoda
+
+In katakoda follow these steps to setup the workstation.
+
+    Download the starter kit for your organization from chef website on your machine.
+    As discussed, the starter kit will have a .chef folder that has two files knife.rb and <USERNAME>.pem file.
+    The knife.rb file contains the URL for your hosted chef server and the <USERNAME>.pem file has the key that connects your workstation with your chef-server.
+    In katakoda create the chef-repo using the command chef generate repo <REPO_NAME>.
+    This repo will not have the .chef. You need to replicate the .chef folder form starter kit in katakoda.
+    Move inside the repo folder and create a directory called .chef. Create two files knife.rb and <USERNAME>.pem in that folder.
+    Copy the content form .chef/knife.rb from starter kit to .chef/knife.rb in katakoda. Same goes for <USERNAME>.pem
+    Finally, check the connection between your chef-server and workstation using the command knife client list.
+
+	
+------------------------------------------------------
+
+Knife
+    Knife is a command line tool that comes with chef DK, which helps us to interact with the chef server and client.
+    Knife has an API interface between the local Chef repository and the Chef Server that lets you manage the nodes, the cookbooks, and recipes, etc
+    The configurations of knife can be found on knife.rb file in \.chef directory, which holds the data like chef-server URL, the path for client key, etc.
+    Knife has a lot of subcommands that can be used to perform a task. knife help lists all such commands.
+    The general format is knife sub-command [argument] [options].
+
+Example: knife bootstrap helps in configuring the node machine.
+
+
+Starter Kit
+
+After signing up for Hosted Chef server you might have downloaded the starter kit, let us take a minute and explore the contents of the kit
+
+    It has few folders such as .chef, cookbooks, roles, etc.
+    The .chef directory has a knife.rb file and two other validator files for the chef server
+    Cookbooks has a sample starter cookbook. You will be creating all your cookbooks inside this folder
+    In case, if you wish to add roles and environments to your nodes, then add those directories to the chef-repo folder.
+    Alternatively, you can also generate repo using the command chef generates repo <REPO_NAME> and copy the content of your .chef directory from the starter kit.
+
+    As of now, you have a server and a workstation setup ready for you. Let us check the connection between them. In the terminal change the directory to chef-repo folder and try the command knife client list.
+    The knife will read the server URL from knife.rb and returns the name of the organization you have created in chef server.
+
+
+Introduction to Cookbooks
+    Cookbook forms the fundamental unit of policy distribution and configuration in chef.
+    Ruby DSL is used by chef for creating cookbooks and recipes.
+    Cookbook specifies the desired state for a node (server).
+    Using cookbook you can configure or install an application into a node, deploy an app and much more.
+    You can use version control system like git to version control your cookbooks, which will be helpful in managing big infrastructure.
+
+A cookbook is a collection of Recipe, attributes, templates, metadata and other components that help in configuring an infrastructure.
+Recipe
+
+    It consists of resources and they will execute in the same order they appear in the cookbook
+    It is written in Ruby DSL.
+    Everything you need to do in a node is written inside a recipe in a declarative format.
+    They are located inside the cookbook directory.
+    While creating a new cookbook, ChefDK will add a default recipe called default.rb.
+
+Now we know that recipe is a collection of resources, let us see a resource with an example of better understanding.
+
+
+
+
+Resources
+
+    Resources are instructions to the chef-client within a node to perform tasks like installation, file creation, running a code, etc
+    Every resource would be of a particular type i.e package, service, template, etc.
+
+Let us consider the following resource. Here, the package is the resource type followed by the name of the package viz., httpd. Any parameter or actions are included in the resource.
+
+package "httpd" do
+    action:instal
+end
+
+    A collection of resources forms a recipe.
+    Resources will only specify what to do. It is the providers that decide on how to do.
+    Resources define the node's desired state whereas providers define a set of steps that bring the node to the desired state.
+    You can find all the predefined resources here.
+
+https://docs.chef.io/resources.html
+
+
+
+Metadata
+
+    A cookbook can make use of recipes from other cookbooks.
+
+    To achieve this, mention references of other cookbooks as dependencies for your cookbook in its metadata.rb file.
+
+    This file is created automatically by the knife when a new cookbook is created.
+
+    This file will be compiled whenever the cookbook is uploaded to the server.
+
+    For example, if cookbook2 needs recipes from cookbook1 then in the metadata.rb file add the code depends 'cookbook1' at the last.
+
+
+Creating a Cookbook
+
+Now you know what a resource and a recipe is.
+
+Let us try creating a cookbook and add a recipe to it.
+
+Use the below command in the terminal inside the chef-repo.
+
+$ chef generate cookbook <COOKBOOK_PATH/COOKBOOK_NAME> (options)
+
+    In the path mentioned, a new directory with the cookbook name will be created.
+    It consists of the default recipe and required files.
+
+
+    In the recipe folder, open default.rb file. It has cookbook name and recipe name in the comment. Create your resource below it.
+    Let us create a recipe that has to create a text file with some content.
+    Add the below content to the default.rb file and save it. Your first cookbook is ready.
+
+file "#{ENV['HOME']}/FirstCookbook.txt" do
+  content 'This is my first cookbook'
+end
+
+
+Run in Local mode
+
+Now let's run the cookbook on your local machine and check if it works.
+
+Run the following command inside the chef-repo directory
+
+chef-client -z -o <COOKBOOK_NAME>
+
+where z stands for local mode and o stands for override.
+
+This will create a new text file called FirstCookbook.txt in your Home directory, with the content you specified in the cookbook.
+
+You will get familiar with chef-client command in further cards.
+
+
+
+Test and Repair
+
+    Now try running the chef-client command you tried before again. Chef will reply saying that the content is up to date.
+    Now change the content of the file in the recipe and run the same command, chef will update the file.
+    Chef will not blindly run a cookbook every time you execute it, Chef will test the cookbook and perform an update only if it is modified from the last run.
+
+Cookbooks can be uploaded from workstation to the server using the command.
+
+$ knife cookbook upload cookbookName
+
+    This will return a success message and upload the cookbook from workstation to the server.
+    In the server web UI under Policy tab, you can see the list of all cookbooks uploaded to the server.
+
+-----------------------
+
+Node in Chef
+
+Till now you have seen how to setup a workstation, chef-server, creating a cookbook and running it on a local machine. Now let us see how to run the cookbook in a node.
+
+    A node is any system that is managed by the chef. The system can be physical, virtual, cloud and even networking devices such as routers, and switch.
+
+    It must be bootstrapped with the server, which installs the chef-client on that machine using which recipes are applied to it.
+
+    The process of bootstrapping will be explained in the node setup.
+
+
+Chef-Client
+
+It is installed locally on every node that is governed by Chef.
+
+When you run chef-client in a node, it performs many operations such as
+
+    Authenticating the node with the chef server.
+    Cookbooks synchronization
+    Compiling the Resources from recipes
+    Configuring the node
+    Handling the exception
+
+To run chef-client, open the terminal in the node and run the command:
+
+$ sudo chef-client
+
+
+Knife Bootstrap
+
+Now you have a node, let us bootstrap it with our chef-server.
+
+Open the terminal and go to the chef-repo, where the private key is located. Run the command
+
+knife bootstrap <SQDN/public_ip> -N <node_name> -i <my-key.pem> -x <username> --sudo
+
+This will install chef-client and the required packages on the node machine. The validation key for Chef server will be copied to the node machine from chef-repo.
+
+Now your node is ready to run cookbooks from the server.
+
+Run knife node list command in the workstation to see all the nodes linked to the server.
+
+
+Ohai
+
+
+    It is a tool that collects the system configuration data, such as OS, network related data, etc.
+    These data are used by chef-client. For example, if a script needs the IP of that node, chef-client will get the data from Ohai.
+    Once a node is bootstrapped with server, you can open the server web UI and go to the node section where the name of the node and its details are listed.
+    The details of the node are collected by Ohai and passed to the server
+    You can run the command ohai | less in both workstation and node to see the configuration data collected by Ohai.
+
+
+Runlist
+
+
+
+    The runlist has a set of recipe and roles to be executed in a node.
+
+    Once you add a recipe to a node's runlist, the node will automatically run that recipe, whenever it checks the server for configuration update.
+
+    You can also force a node to run a runlist by using sudo chef-client command in that node.
+
+    You can add a recipe to run list using command $ knife node run_list add node_name "recipe[recipe_name]"
+
+    You can also add the runlist in the server web UI under Nodes tab.
+
+    Now run chef-client in the node to apply the configuration from the cookbook.
+
+
+	
+    When you run Chef client, it will undergo a compile phase and then a execute phase.
+    In compile phase, all the resources from the recipe will be loaded into Resource collection in the same order as in runlist.
+    Once all the resources are loaded, chef will check if the resources are in a required state. If not it will execute and bring it to the required state. This is execute phase.
+
+
+Introduction to Test kitchen
+
+Testing plays a vital role in Infrastructure management. Chef itself is a test-driven ecosystem. It has a built-in testing framework called Test Kitchen that comes with ChefDK.
+
+    Usually, scripts won't work in the same way in both development environment and production environment.
+    Test kitchen helps in simulating a production environment and see how the cookbook works.
+    To run the virtual machines, you need virtual box and vagrant installed in your workstation, which you might already have done at the beginning of the course.
+
+
+Test Kitchen - Setup
+
+
+    When you create a cookbook using generate cookbook command, it will automatically create a .kitchen.yml file in your cookbook directory. Go ahead and explore that file.
+    It has the details to run the virtual machine such as driver, platform, etc.
+    The platform has the list of OS you want to test the cookbook. Set that as Ubuntu.
+    Open the terminal and move to cookbook directory. Run the command kitchen create.
+    This will download an Ubuntu virtual box in your system and create the instance.
+
+Test Kitchen - Working
+
+    Now run the command kitchen list it will show the status of the virtual machine.
+    To install chef-client in the virtual machine and run the cookbook use the command kitchen convergence.
+    If there is any exception in the script, you can see that in output.
+    Use kitchen login command to log in to the virtual machine and check manually whether the machine is in the desired state after running the cookbook.
+
+
+
+Test Kitchen - Automated Testing
+
+Till now you know how the test the code manually using test kitchen. Now let us automate the process.
+
+    Inside the cookbook directory to get a test directory with a default.rb ruby file.
+    Explore the file, you can see inspec code in it, using which you can test the cookbook. Here you can open a port or a run a command or anything that you will do manually to test the code.
+    Inspec actually login into your virtual server and execute the command locally.
+    To run the test, use the command kitchen verify.
+    Once your testing is done, use the command kitchen destroy to delete the virtual instance to free up system resource.
+
+
+
+Need for Roles and Environments
+
+    Roles and Environment are the methods that are available to group your nodes (servers).
+    You might end up in a situation where you might want to run a set of cookbooks only in development servers or only in a testing server.
+    In these situations, roles and environment are very useful.
+
+Roles :
+
+
+
+    The role defines a particular set of recipes that should run in particular type of nodes(i.e. web server, database server).
+
+    For Example, if you have to run a set of recipes for a web server and another set for a database server, you can do so by using Roles.
+
+    You need to assign Role to a node in its runlist.
+
+    You can create Roles inside the chef-repo\roles folder. Take a look at a sample roles file: webserver.rb file.
+
+name 'webserver'
+description 'Web Server'
+run_list 'recipe[apache]'
+
+    This will run apache recipe for all server whose role is a webserver. You can add a role to a node during node bootstrap.
+    You can upload your role to the chef server using the command knife role from file webserver.rb.
+
+
+	
+Environments
+    This is similar to role; here we define which version of cookbook to run in particular environment (i.e., Production, Development)
+    In production, you will run the stable version of a cookbook, whereas in development you will test some new features.
+    Environments help in running a different version of a cookbook as per requirement.
+    You can create Environment inside the chef-repo\environment folder. Take a look at a sample environment file: production.rb file:
+
+name 'production'
+description 'stable code'
+cookbook  'apache','1.0.1'
+
+    This will run apache 1.0.1 for all server whose environment is production. You can add environment to a node during bootstrap.
+    To upload cookbook to the chef server, use the command knife environment from file production.rb.
+
